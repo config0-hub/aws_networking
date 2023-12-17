@@ -22,12 +22,12 @@ def run(stackargs):
                              types="str")
 
     # Add execgroup
-    stack.add_execgroup("config0-hub:::aws_networking::sg_2tier")
-    stack.add_execgroup("config0-hub:::aws_networking::sg_3tier")
+    stack.add_execgroup("config0-publish:::aws_networking::sg_2tier")
+    stack.add_execgroup("config0-publish:::aws_networking::sg_3tier")
 
     # Add substack
-    stack.add_substack('config0-hub:::tf_executor')
-    stack.add_substack('config0-hub:::parse_terraform')
+    stack.add_substack('config0-publish:::tf_executor')
+    stack.add_substack('config0-publish:::parse_terraform')
 
     # Initialize
     stack.init_variables()
