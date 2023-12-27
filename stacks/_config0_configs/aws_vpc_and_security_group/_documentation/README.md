@@ -43,7 +43,7 @@
 ```
 infrastructure:
    vpc:
-       stack_name: config0-publish:::aws_vpc_and_security_group
+       stack_name: config0-hub:::aws_vpc_and_security_group
        arguments:
           main_network_block: 10.13.0.0/16
           tier_level: "2"

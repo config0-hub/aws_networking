@@ -26,14 +26,14 @@ def run(stackargs):
                              types="str")
 
     # Add execgroup
-    stack.add_execgroup("config0-publish:::aws_networking::vpc_simple",
+    stack.add_execgroup("config0-hub:::aws_networking::vpc_simple", 
                         "tf_execgroup")
 
     # Add substack
-    stack.add_substack('config0-publish:::tf_executor')
-    stack.add_substack('config0-publish:::parse_terraform')
-    stack.add_substack('config0-publish:::aws_sg')
-    stack.add_substack('config0-publish:::publish_vpc_info', "publish_vpc")
+    stack.add_substack('config0-hub:::tf_executor')
+    stack.add_substack('config0-hub:::parse_terraform')
+    stack.add_substack('config0-hub:::aws_sg')
+    stack.add_substack('config0-hub:::publish_vpc_info', "publish_vpc")
 
     # Initialize
     stack.init_variables()
@@ -99,13 +99,13 @@ def run(stackargs):
     arguments["aws_default_region"] = stack.aws_default_region
     arguments["add_values"] = json.dumps({"vpc": stack.vpc_name})
 
-    kwargs = {"arguments": arguments}
-    kwargs["automation_phase"] = "infrastructure"
-    kwargs["human_description"] = "Parse Terraform for subnets"
-    kwargs["display"] = True
-    kwargs["display_hash"] = stack.get_hash_object(kwargs)
+    inputargs = {"arguments": arguments}
+    inputargs["automation_phase"] = "infrastructure"
+    inputargs["human_description"] = "Parse Terraform for subnets"
+    inputargs["display"] = True
+    inputargs["display_hash"] = stack.get_hash_object(inputargs)
 
-    stack.parse_terraform.insert(**kwargs)
+    stack.parse_terraform.insert(**inputargs)
 
     # add security groups
     arguments = {"vpc_name": stack.vpc_name,
@@ -117,20 +117,20 @@ def run(stackargs):
     if stack.get_attr("tier_level"):
         arguments["tier_level"] = stack.tier_level
 
-    kwargs = {"arguments": arguments}
-    kwargs["automation_phase"] = "infrastructure"
-    kwargs["human_description"] = 'Creating security groups for VPC {}'.format(
+    inputargs = {"arguments": arguments}
+    inputargs["automation_phase"] = "infrastructure"
+    inputargs["human_description"] = 'Creating security groups for VPC {}'.format(
         stack.vpc_name)
 
-    stack.aws_sg.insert(display=True, **kwargs)
+    stack.aws_sg.insert(display=True, **inputargs)
 
     # publish info on dashboard
     arguments = {"vpc_name": stack.vpc_name}
-    kwargs = {"arguments": arguments}
-    kwargs["automation_phase"] = "infrastructure"
-    kwargs["human_description"] = 'Publish VPC {}'.format(stack.vpc_name)
+    inputargs = {"arguments": arguments}
+    inputargs["automation_phase"] = "infrastructure"
+    inputargs["human_description"] = 'Publish VPC {}'.format(stack.vpc_name)
 
-    stack.publish_vpc.insert(display=True, **kwargs)
+    stack.publish_vpc.insert(display=True, **inputargs)
 
     return stack.get_results()
 

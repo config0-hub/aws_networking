@@ -25,9 +25,9 @@ def run(stackargs):
     stack.parse.add_optional(key="publish_to_saas", default="null")
 
     # add substacks
-    stack.add_substack('config0-publish:::aws_vpc')
-    stack.add_substack('config0-publish:::aws_sg')
-    stack.add_substack('config0-publish:::publish_vpc_info')
+    stack.add_substack('config0-hub:::aws_vpc')
+    stack.add_substack('config0-hub:::aws_sg')
+    stack.add_substack('config0-hub:::publish_vpc_info')
 
     # init the stack namespace
     stack.init_variables()
@@ -85,11 +85,11 @@ def run(stackargs):
     if stack.get_attr("publish_to_saas"):
         arguments["publish_to_saas"] = stack.publish_to_saas
 
-    kwargs = {"arguments": arguments}
-    kwargs["automation_phase"] = "infrastructure"
-    kwargs["human_description"] = 'Creating VPC {}'.format(stack.vpc_name)
+    inputargs = {"arguments": arguments}
+    inputargs["automation_phase"] = "infrastructure"
+    inputargs["human_description"] = 'Creating VPC {}'.format(stack.vpc_name)
 
-    stack.aws_vpc.insert(display=True, **kwargs)
+    stack.aws_vpc.insert(display=True, **inputargs)
 
     # Add security groups
     arguments = {"vpc_name": stack.vpc_name}
@@ -106,11 +106,11 @@ def run(stackargs):
     if stack.get_attr("tags"):
         arguments["tags"] = stack.tags
 
-    kwargs = {"arguments": arguments}
-    kwargs["automation_phase"] = "infrastructure"
-    kwargs["human_description"] = 'Creating security groups for VPC {}'.format(
+    inputargs = {"arguments": arguments}
+    inputargs["automation_phase"] = "infrastructure"
+    inputargs["human_description"] = 'Creating security groups for VPC {}'.format(
         stack.vpc_name)
 
-    stack.aws_sg.insert(display=True, **kwargs)
+    stack.aws_sg.insert(display=True, **inputargs)
 
     return stack.get_results()

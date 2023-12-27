@@ -58,13 +58,13 @@ def run(stackargs):
                              types="str")
 
     # Add execgroup
-    stack.add_execgroup("config0-publish:::aws_networking::vpc",
+    stack.add_execgroup("config0-hub:::aws_networking::vpc",
                         "tf_execgroup")
 
     # Add substack
-    stack.add_substack('config0-publish:::tf_executor')
-    stack.add_substack('config0-publish:::parse_terraform')
-    stack.add_substack('config0-publish:::publish_vpc_info', "publish_vpc")
+    stack.add_substack('config0-hub:::tf_executor')
+    stack.add_substack('config0-hub:::parse_terraform')
+    stack.add_substack('config0-hub:::publish_vpc_info', "publish_vpc")
 
     # Initialize
     stack.init_variables()
@@ -138,20 +138,21 @@ def run(stackargs):
                                           "provider":"aws",
                                           "region":stack.aws_default_region})
 
-    kwargs = {"arguments": arguments}
-    kwargs["automation_phase"] = "infrastructure"
-    kwargs["human_description"] = "Parse Terraform for subnets"
-    kwargs["display"] = True
-    kwargs["display_hash"] = stack.get_hash_object(kwargs)
+    inputargs = {"arguments": arguments,
+                 "automation_phase": "infrastructure",
+                 "human_description": "Parse Terraform for subnets",
+                 "display": True}
 
-    stack.parse_terraform.insert(**kwargs)
+    inputargs["display_hash"] = stack.get_hash_object(inputargs)
+
+    stack.parse_terraform.insert(**inputargs)
 
     # publish info on dashboard
     arguments = {"vpc_name": stack.vpc_name}
-    kwargs = {"arguments": arguments}
-    kwargs["automation_phase"] = "infrastructure"
-    kwargs["human_description"] = 'Publish VPC {}'.format(stack.vpc_name)
+    inputargs = {"arguments": arguments}
+    inputargs["automation_phase"] = "infrastructure"
+    inputargs["human_description"] = 'Publish VPC {}'.format(stack.vpc_name)
 
-    stack.publish_vpc.insert(display=True, **kwargs)
+    stack.publish_vpc.insert(display=True, **inputargs)
 
     return stack.get_results()

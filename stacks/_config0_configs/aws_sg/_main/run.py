@@ -22,12 +22,12 @@ def run(stackargs):
                              types="str")
 
     # Add execgroup
-    stack.add_execgroup("config0-publish:::aws_networking::sg_2tier")
-    stack.add_execgroup("config0-publish:::aws_networking::sg_3tier")
+    stack.add_execgroup("config0-hub:::aws_networking::sg_2tier")
+    stack.add_execgroup("config0-hub:::aws_networking::sg_3tier")
 
     # Add substack
-    stack.add_substack('config0-publish:::tf_executor')
-    stack.add_substack('config0-publish:::parse_terraform')
+    stack.add_substack('config0-hub:::tf_executor')
+    stack.add_substack('config0-hub:::parse_terraform')
 
     # Initialize
     stack.init_variables()
@@ -94,13 +94,13 @@ def run(stackargs):
     arguments["add_values"] = json.dumps({"vpc_id": stack.vpc_id, 
                                           "vpc": stack.vpc_name})
 
-    kwargs = {"arguments": arguments}
-    kwargs["automation_phase"] = "infrastructure"
-    kwargs["human_description"] = "Parse Terraform for {}".format(
+    inputargs = {"arguments": arguments}
+    inputargs["automation_phase"] = "infrastructure"
+    inputargs["human_description"] = "Parse Terraform for {}".format(
         "aws_security_group")
-    kwargs["display"] = True
-    kwargs["display_hash"] = stack.get_hash_object(kwargs)
+    inputargs["display"] = True
+    inputargs["display_hash"] = stack.get_hash_object(inputargs)
 
-    stack.parse_terraform.insert(**kwargs)
+    stack.parse_terraform.insert(**inputargs)
 
     return stack.get_results()
