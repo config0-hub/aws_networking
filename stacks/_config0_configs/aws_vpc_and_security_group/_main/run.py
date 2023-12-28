@@ -25,9 +25,9 @@ def run(stackargs):
     stack.parse.add_optional(key="publish_to_saas", default="null")
 
     # add substacks
-    stack.add_substack('config0-hub:::aws_vpc')
-    stack.add_substack('config0-hub:::aws_sg')
-    stack.add_substack('config0-hub:::publish_vpc_info')
+    stack.add_substack('config0-publish:::aws_vpc')
+    stack.add_substack('config0-publish:::aws_sg')
+    stack.add_substack('config0-publish:::publish_vpc_info')
 
     # init the stack namespace
     stack.init_variables()
