@@ -22,7 +22,7 @@ def run(stackargs):
     # docker image to execute terraform with
     stack.parse.add_optional(key="aws_default_region",
                              default="eu-west-1",
-                             tags="tfvar,db,resource,runtime_settings",
+                             tags="tfvar,db,resource,tf_runtime",
                              types="str")
 
     # Add execgroup
