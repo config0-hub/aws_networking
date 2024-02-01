@@ -18,6 +18,10 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
   enable_dns_hostnames = true
 
+  lifecycle {
+    ignore_changes = [tags]
+  }
+
   tags = merge(
     var.cloud_tags,
     var.vpc_tags,
@@ -31,6 +35,10 @@ resource "aws_vpc" "main" {
 
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.main.id
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 
   tags = merge(
     var.cloud_tags,
@@ -50,6 +58,10 @@ resource "aws_subnet" "public" {
 
   map_public_ip_on_launch = true
   availability_zone       = "${element(keys(local.public_subnets), count.index)}"
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 
   tags = merge(
       var.cloud_tags,
@@ -71,6 +83,10 @@ resource "aws_subnet" "private" {
   map_public_ip_on_launch = true
   availability_zone       = "${element(keys(local.private_subnets), count.index)}"
 
+  lifecycle {
+    ignore_changes = [tags]
+  }
+
   tags = merge(
       var.cloud_tags,
       var.vpc_tags,
@@ -89,6 +105,10 @@ resource "aws_subnet" "private" {
 
 resource "aws_default_route_table" "public" {
   default_route_table_id = "${aws_vpc.main.main_route_table_id}"
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 
   tags = merge(
     var.cloud_tags,
@@ -120,6 +140,11 @@ resource "aws_route_table_association" "public" {
 
 resource "aws_route_table" "private" {
   vpc_id     = aws_vpc.main.id
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
+
 
   tags = merge(
     var.cloud_tags,

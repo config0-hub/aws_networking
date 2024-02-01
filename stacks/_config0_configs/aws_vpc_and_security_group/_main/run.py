@@ -85,11 +85,14 @@ def run(stackargs):
     if stack.get_attr("publish_to_saas"):
         arguments["publish_to_saas"] = stack.publish_to_saas
 
-    inputargs = {"arguments": arguments}
-    inputargs["automation_phase"] = "infrastructure"
-    inputargs["human_description"] = 'Creating VPC {}'.format(stack.vpc_name)
+    inputargs = {
+        "arguments": arguments,
+        "automation_phase": "infrastructure",
+        "human_description": 'Creating VPC {}'.format(stack.vpc_name)
+    }
 
-    stack.aws_vpc.insert(display=True, **inputargs)
+    stack.aws_vpc.insert(display=True,
+                         **inputargs)
 
     # Add security groups
     arguments = {"vpc_name": stack.vpc_name}
@@ -106,11 +109,14 @@ def run(stackargs):
     if stack.get_attr("tags"):
         arguments["tags"] = stack.tags
 
-    inputargs = {"arguments": arguments}
-    inputargs["automation_phase"] = "infrastructure"
-    inputargs["human_description"] = 'Creating security groups for VPC {}'.format(
-        stack.vpc_name)
+    inputargs = {
+        "arguments": arguments,
+        "automation_phase": "infrastructure",
+        "human_description": 'Creating security groups for VPC {}'.format(
+                     stack.vpc_name)
+    }
 
-    stack.aws_sg.insert(display=True, **inputargs)
+    stack.aws_sg.insert(display=True,
+                        **inputargs)
 
     return stack.get_results()

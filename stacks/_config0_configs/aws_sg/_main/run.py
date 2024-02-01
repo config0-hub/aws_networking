@@ -58,6 +58,8 @@ def run(stackargs):
     else:
         stack.set_variable("tf_execgroup_name", stack.sg_3tier.name)
 
+    stack.set_variable("timeout",600)
+
     # use the terraform constructor (helper)
     # but this is optional
     tf = TFConstructor(stack=stack,
@@ -81,26 +83,30 @@ def run(stackargs):
                              **tf.get())
 
     # parse terraform and insert subnets
-    arguments = {"src_resource_type": "security_group",
-                 "src_provider": "aws",
-                 "src_resource_name": stack.tf_main_name,
-                 "dst_prefix_name": stack.vpc_name,
-                 "dst_resource_type": "security_group",
-                 "dst_terraform_type": "aws_security_group"}
+    arguments = {
+        "src_resource_type": "security_group",
+        "src_provider": "aws",
+        "src_resource_name": stack.tf_main_name,
+        "dst_prefix_name": stack.vpc_name,
+        "dst_resource_type": "security_group",
+        "dst_terraform_type": "aws_security_group",
+        "mapping": json.dumps({"id": "sg_id"}),
+        "must_exists": True,
+        "aws_default_region": stack.aws_default_region,
+        "add_values": json.dumps({
+            "vpc_id": stack.vpc_id,
+            "vpc": stack.vpc_name
+        })
+    }
 
-    arguments["mapping"] = json.dumps({"id": "sg_id"})
-    arguments["must_exists"] = True
-    arguments["aws_default_region"] = stack.aws_default_region
-    arguments["add_values"] = json.dumps({"vpc_id": stack.vpc_id, 
-                                          "vpc": stack.vpc_name})
+    inputargs = {
+        "arguments": arguments,
+        "automation_phase": "infrastructure",
+        "human_description": "Parse Terraform for {}".format(
+                     "aws_security_group"),
+        "display": True}
 
-    inputargs = {"arguments": arguments}
-    inputargs["automation_phase"] = "infrastructure"
-    inputargs["human_description"] = "Parse Terraform for {}".format(
-        "aws_security_group")
-    inputargs["display"] = True
     inputargs["display_hash"] = stack.get_hash_object(inputargs)
-
     stack.parse_terraform.insert(**inputargs)
 
     return stack.get_results()

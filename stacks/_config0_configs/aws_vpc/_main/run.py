@@ -106,6 +106,8 @@ def run(stackargs):
                        tags="tfvar",
                        types="str")
 
+    stack.set_variable("timeout",600)
+
     # use the terraform constructor (helper)
     # but this is optional
     tf = TFConstructor(stack=stack,
@@ -122,21 +124,24 @@ def run(stackargs):
                              **tf.get())
 
     # parse terraform and insert subnets
-    arguments = {"src_resource_type": "vpc",
-                 "src_provider": "aws",
-                 "src_resource_name": stack.vpc_name,
-                 "dst_resource_type": "subnet",
-                 "dst_terraform_type": "aws_subnet"}
+    arguments = {
+        "src_resource_type": "vpc",
+        "src_provider": "aws",
+        "src_resource_name": stack.vpc_name,
+        "dst_resource_type": "subnet",
+        "dst_terraform_type": "aws_subnet",
+        "mapping": json.dumps({"id": "subnet_id"}),
+        "must_exists": True,
+        "aws_default_region": stack.aws_default_region,
+        "add_values": json.dumps({
+            "vpc": stack.vpc_name,
+            "aws_default_region": stack.aws_default_region,
+            "provider": "aws",
+            "region": stack.aws_default_region
+        })
+    }
 
     # this will map the subnet_id to id
-    arguments["mapping"] = json.dumps({"id": "subnet_id"})
-    arguments["must_exists"] = True
-    arguments["aws_default_region"] = stack.aws_default_region
-
-    arguments["add_values"] = json.dumps({"vpc": stack.vpc_name,
-                                          "aws_default_region":stack.aws_default_region,
-                                          "provider":"aws",
-                                          "region":stack.aws_default_region})
 
     inputargs = {"arguments": arguments,
                  "automation_phase": "infrastructure",
@@ -148,10 +153,13 @@ def run(stackargs):
     stack.parse_terraform.insert(**inputargs)
 
     # publish info on dashboard
-    arguments = {"vpc_name": stack.vpc_name}
-    inputargs = {"arguments": arguments}
-    inputargs["automation_phase"] = "infrastructure"
-    inputargs["human_description"] = 'Publish VPC {}'.format(stack.vpc_name)
+    inputargs = {
+        "arguments": {
+            "vpc_name": stack.vpc_name
+        },
+        "automation_phase": "infrastructure",
+        "human_description": f'Publish VPC {stack.vpc_name}'
+    }
 
     stack.publish_vpc.insert(display=True, **inputargs)
 
