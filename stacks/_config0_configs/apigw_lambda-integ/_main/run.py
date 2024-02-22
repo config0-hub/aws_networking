@@ -1,14 +1,13 @@
 from config0_publisher.terraform import TFConstructor
 
 # lookup lambda execution arn
-
-
 def _get_lambda_arn(stack):
 
-    _lookup = {"must_exists": True}
-    _lookup["resource_type"] = "aws_lambda"
-    _lookup["name"] = stack.lambda_name
-    _lookup["region"] = stack.aws_default_region
+    _lookup = {
+        "must_exists": True,
+        "resource_type": "aws_lambda",
+        "name": stack.lambda_name,
+        "region": stack.aws_default_region }
 
     return list(stack.get_resource(**_lookup))[0]["invoke_arn"]
 
@@ -48,7 +47,8 @@ def run(stackargs):
     stack.init_execgroups()
     stack.init_substacks()
 
-    stack.set_variable("lambda_invoke_arn", _get_lambda_arn(stack),
+    stack.set_variable("lambda_invoke_arn",
+                       _get_lambda_arn(stack),
                        tags="tfvar",
                        types="str")
 

@@ -1,17 +1,13 @@
 variable "stage" {
-	default = "v1"
+    default = "v1"
 }
 
 variable "resource_name" {
-	default = "codebuild"
+    default = "codebuild"
 }
 
-variable "lambda_invoke_arn" {
-}
-
-variable "lambda_name" {
-    default = "process-webhook"
-}
+variable "lambda_invoke_arn" {}
+variable "lambda_name" {}
 
 variable "apigateway_name" {
     default = "api-test"
