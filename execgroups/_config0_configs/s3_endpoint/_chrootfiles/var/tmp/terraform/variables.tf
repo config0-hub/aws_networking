@@ -3,8 +3,14 @@ variable "vpc_id" {
   description = "vpc id"
 }
 
+variable "route_table_ids" {}
+
 variable "aws_default_region" {
   default = "us-east-1"
+}
+
+variable "s3_gateway_name" {
+  default = "s3_gateway"
 }
 
 variable "cloud_tags" {

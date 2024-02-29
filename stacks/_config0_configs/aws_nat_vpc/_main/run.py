@@ -1,0 +1,73 @@
+from config0_publisher.terraform import TFConstructor
+
+def run(stackargs):
+
+    # instantiate authoring stack
+    stack = newStack(stackargs)
+
+    # Add default variable
+    stack.parse.add_required(key="nat_gateway_name",
+                             tags="tfvar",
+                             types="str")
+
+    stack.parse.add_required(key="subnet_ids",
+                             types="list")
+
+    stack.parse.add_required(key="route_table_id",
+                             tags="tfvar",
+                             types="str")
+
+
+    # add execgroup
+    stack.add_execgroup("config0-publish:::aws_networking::add_nat_vpc",
+                        "tf_execgroup")
+
+    # add substack
+    stack.add_substack("config0-publish:::tf_executor")
+
+    # initialize
+    stack.init_variables()
+    stack.init_execgroups()
+    stack.init_substacks()
+
+
+    stack.set_variable("subnet_id", 
+                       sorted(stack.to_list(stack.subnet_ids))[0],
+                       tags="tfvar",
+                       types="list")
+
+
+    stack.set_variable("timeout",600)
+
+    # use the terraform constructor (helper)
+    # but this is optional
+    tf = TFConstructor(stack=stack,
+                       execgroup_name=stack.tf_execgroup.name,
+                       provider="aws",
+                       resource_name=stack.nat_gateway_name,
+                       resource_type="nat_gateway",
+                       terraform_type="aws_nat_gateway")
+
+    tf.include(keys=["id",
+                     "connectivity_type",
+                     "network_interface_id",
+                     "private_ip",
+                     "public_ip",
+                     "allocation_id"])
+
+    # we should identify this gateway by giving it a name in the db table
+    tf.include(values={"name":stack.nat_gateway_name,
+                       "nat_gateway_name":stack.nat_gateway_name})
+
+    output_keys = ["public_ip",
+                   "private_ip",
+                   "network_interface_id",
+                   "allocation_id"])
+
+    tf.output(keys=output_keys)
+
+    # finalize the tf_executor
+    stack.tf_executor.insert(display=True,
+                             **tf.get())
+
+    return stack.get_results()
