@@ -124,7 +124,7 @@ def run(stackargs):
     arguments["aws_default_region"] = stack.aws_default_region
 
     arguments["add_values"] = json.dumps({
-        "vpc": stack.vpc_name
+        "vpc": stack.vpc_name,
         "public_route_table":True
         }
     )
@@ -151,7 +151,7 @@ def run(stackargs):
     arguments["aws_default_region"] = stack.aws_default_region
 
     arguments["add_values"] = json.dumps({
-        "vpc": stack.vpc_name
+        "vpc": stack.vpc_name,
         "private_route_table":True
         }
     )
