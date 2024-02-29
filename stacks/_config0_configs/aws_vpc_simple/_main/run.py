@@ -109,6 +109,61 @@ def run(stackargs):
 
     stack.parse_terraform.insert(**inputargs)
 
+    # parse terraform and insert default/public route 
+    arguments = {"src_resource_type": "vpc",
+                 "src_provider": "aws",
+                 "src_resource_name": stack.vpc_name,
+                 "dst_resource_type": "route_table",
+                 "dst_terraform_type": "aws_default_route_table"}
+
+    # this will map the default_route_table to id
+    # we assume the default route table is a public route table
+    # for public subnets
+    arguments["mapping"] = json.dumps({"id": "route_table_id"})
+    arguments["must_exists"] = True
+    arguments["aws_default_region"] = stack.aws_default_region
+
+    arguments["add_values"] = json.dumps({
+        "vpc": stack.vpc_name
+        "public_route_table":True
+        }
+    )
+
+    inputargs = {"arguments": arguments}
+    inputargs["automation_phase"] = "infrastructure"
+    inputargs["human_description"] = "Parse Terraform for default route table"
+    inputargs["display"] = True
+    inputargs["display_hash"] = stack.get_hash_object(inputargs)
+
+    stack.parse_terraform.insert(**inputargs)
+
+    # parse terraform and insert default/private route 
+    # we assume it is used for private subnets
+    arguments = {"src_resource_type": "vpc",
+                 "src_provider": "aws",
+                 "src_resource_name": stack.vpc_name,
+                 "dst_resource_type": "route_table",
+                 "dst_terraform_type": "aws_route_table"}
+
+    # this will map the default_route_table to id
+    arguments["mapping"] = json.dumps({"id": "route_table_id"})
+    arguments["must_exists"] = True
+    arguments["aws_default_region"] = stack.aws_default_region
+
+    arguments["add_values"] = json.dumps({
+        "vpc": stack.vpc_name
+        "private_route_table":True
+        }
+    )
+
+    inputargs = {"arguments": arguments}
+    inputargs["automation_phase"] = "infrastructure"
+    inputargs["human_description"] = "Parse Terraform for route table"
+    inputargs["display"] = True
+    inputargs["display_hash"] = stack.get_hash_object(inputargs)
+
+    stack.parse_terraform.insert(**inputargs)
+
     # add security groups
     arguments = {"vpc_name": stack.vpc_name,
                  "aws_default_region": stack.aws_default_region}
@@ -135,4 +190,3 @@ def run(stackargs):
     stack.publish_vpc.insert(display=True, **inputargs)
 
     return stack.get_results()
-
