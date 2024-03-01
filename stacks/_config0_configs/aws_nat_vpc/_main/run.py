@@ -10,8 +10,7 @@ def run(stackargs):
                              types="str")
 
     # the nat needs to be attached to a public subnet
-    stack.parse.add_required(key="public_subnet_id",
-                             tags="tfvar",
+    stack.parse.add_required(key="public_subnet_ids",
                              types="list")
 
     # the route table is private one - not public - a bit nuanced
@@ -33,8 +32,11 @@ def run(stackargs):
 
     stack.set_variable("timeout",600)
 
-    # use the terraform constructor (helper)
-    # but this is optional
+    stack.set_variable("public_subnet_id",
+                       sorted(stack.to_list(stack.public_subnet_ids))[0],
+                       tags="tfvar",
+                       types="str")
+
     tf = TFConstructor(stack=stack,
                        execgroup_name=stack.tf_execgroup.name,
                        provider="aws",

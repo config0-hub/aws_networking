@@ -10,10 +10,11 @@
 
 **Required**
 
-| argument               | description                                      | var type | default      |
-|------------------------|--------------------------------------------------| -------- | ------------ |
-| private_route_table_id | the private route table to associate with NAT gw | string   | None         |
-| public_subnet_id      | the public subnet id to attached to nat gateway | string   | None         |
+| argument               | description                                                                  | var type | default      |
+|------------------------|------------------------------------------------------------------------------| -------- | ------------ |
+| private_route_table_id | the private route table to associate with NAT gw                             | string   | None         |
+| public_subnet_ids      | the public subnet ids to attached to nat gateway (only one will be selected) | string   | None         |
+| nat_gateway_name       | adds a name to the nat gw as a tag in aws                                    | string   | None         |
 
 **Sample launch - simple**
 
