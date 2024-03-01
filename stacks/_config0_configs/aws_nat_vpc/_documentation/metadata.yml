@@ -1,19 +1,11 @@
-desc: The stack that creates an RDS on AWS.
+desc: This adds an AWS Nat Gateway to an existing VPC.
 release: 0.0.1
 categories: 
-   - aws
-   - rds
-   - database
-   - cloud
-   - public_cloud
-   - terraform
+   - networking
+   - nat
 tags:
-   - terraform
-   - rds
-   - database
-   - aws
+   - nat
    - infrastructure
-   - featured_infrastructure
-   - featured
+   - aws
    - cloud
    - public_cloud

@@ -5,18 +5,19 @@ def run(stackargs):
     # instantiate authoring stack
     stack = newStack(stackargs)
 
-    # Add default variable
     stack.parse.add_required(key="nat_gateway_name",
                              tags="tfvar",
                              types="str")
 
-    stack.parse.add_required(key="subnet_ids",
+    # the nat needs to be attached to a public subnet
+    stack.parse.add_required(key="public_subnet_id",
+                             tags="tfvar",
                              types="list")
 
-    stack.parse.add_required(key="route_table_id",
+    # the route table is private one - not public - a bit nuanced
+    stack.parse.add_required(key="private_route_table_id",
                              tags="tfvar",
                              types="str")
-
 
     # add execgroup
     stack.add_execgroup("config0-publish:::aws_networking::add_nat_vpc",
@@ -29,13 +30,6 @@ def run(stackargs):
     stack.init_variables()
     stack.init_execgroups()
     stack.init_substacks()
-
-
-    stack.set_variable("subnet_id", 
-                       sorted(stack.to_list(stack.subnet_ids))[0],
-                       tags="tfvar",
-                       types="list")
-
 
     stack.set_variable("timeout",600)
 
@@ -62,7 +56,7 @@ def run(stackargs):
     output_keys = ["public_ip",
                    "private_ip",
                    "network_interface_id",
-                   "allocation_id"])
+                   "allocation_id"]
 
     tf.output(keys=output_keys)
 
