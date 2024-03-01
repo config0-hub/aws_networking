@@ -11,7 +11,7 @@ def run(stackargs):
 
     # the nat needs to be attached to a public subnet
     stack.parse.add_required(key="public_subnet_ids",
-                             types="list")
+                             types="str")
 
     # the route table is private one - not public - a bit nuanced
     stack.parse.add_required(key="private_route_table_id",
