@@ -1,0 +1,11 @@
+desc: This adds an AWS Nat Instance to an existing VPC.
+release: 0.0.1
+categories: 
+   - networking
+   - nat
+tags:
+   - nat
+   - infrastructure
+   - aws
+   - cloud
+   - public_cloud

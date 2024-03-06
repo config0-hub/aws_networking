@@ -19,7 +19,7 @@ def run(stackargs):
                              types="str")
 
     # add execgroup
-    stack.add_execgroup("config0-publish:::aws_networking::add_nat_vpc",
+    stack.add_execgroup("config0-publish:::aws_networking::natgw_vpc",
                         "tf_execgroup")
 
     # add substack

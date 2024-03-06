@@ -1,0 +1,114 @@
+from config0_publisher.terraform import TFConstructor
+
+def run(stackargs):
+
+    # instantiate authoring stack
+    stack = newStack(stackargs)
+
+    stack.parse.add_required(key="service_name",
+                             tags="tfvar",
+                             types="str")
+
+    stack.parse.add_required(key="vpc_id",
+                             tags="tfvar",
+                             types="str")
+
+    stack.parse.add_optional(key="instance_types",
+                             default="t3.nano,t3a.nano,t3.micro,t3a.micro,t3.small,t3a.small",
+                             types="str")
+
+    stack.parse.add_optional(key="cidr_ingress_accept",
+                             default="10.0.0.0/16,10.10.0.0/16,10.20.0.0/16,10.30.0.0/16",
+                             types="str")
+
+    # the nat needs to be attached to a public subnet
+    stack.parse.add_required(key="public_subnet_ids",
+                             types="str")
+
+    # the route table is private one - not public - a bit nuanced
+    stack.parse.add_required(key="private_route_table_id",
+                             types="str")
+
+    stack.parse.add_optional(key="ssh_key_name",
+                             default="null",
+                             types="str")
+
+    stack.parse.add_optional(key="use_spot_instance",
+                             default=True,
+                             tags="tfvar",
+                             types="bool")
+
+    # add execgroup
+    stack.add_execgroup("config0-publish:::aws_networking::nat_inst_vpc",
+                        "tf_execgroup")
+
+    # add substack
+    stack.add_substack("config0-publish:::tf_executor")
+
+    # initialize
+    stack.init_variables()
+    stack.init_execgroups()
+    stack.init_substacks()
+
+    stack.set_variable("private_cidr_ingress_accept",
+                       stack.to_list(stack.cidr_ingress_accept),
+                       tags="tfvar",
+                       types="list")
+
+    stack.set_variable("instance_types",
+                       stack.to_list(stack.instance_types),
+                       tags="tfvar",
+                       types="list")
+
+    if stack.get_attr("ssh_key_name"):
+        stack.set_variable("ssh_key_name",
+                           stack.ssh_key_name,
+                           tags="tfvar",
+                           types="str")
+
+    stack.set_variable("timeout",600)
+
+    stack.set_variable("public_subnet_id",
+                       sorted(stack.to_list(stack.public_subnet_ids))[0],
+                       tags="tfvar",
+                       types="str")
+
+    stack.set_variable("route_table_private_ids",
+                       [ stack.private_route_table_id ],
+                       tags = "tfvar",
+                       types = "list")
+
+    # use spot instances
+    #stack.set_variable("use_spot_instance",
+    #                   true,
+    #                   tags="tfvar",
+    #                   types="bool")
+
+    # resource type is asg since the nat instances are vms in asg
+    tf = TFConstructor(stack=stack,
+                       execgroup_name=stack.tf_execgroup.name,
+                       provider="aws",
+                       resource_name=stack.service_name,
+                       resource_type="asg",
+                       terraform_type="aws_autoscaling_group")
+
+    tf.include(keys=["id",
+                     "arn",
+                     "max_size",
+                     "service_linked_role_arn",
+                     "min_size"])
+
+    # we should identify this gateway by giving it a name in the db table
+    tf.include(values={"name":stack.service_name,
+                       "nat_instance_name":stack.service_name})
+
+    output_keys = ["arn",
+                   "name" ]
+
+    tf.output(keys=output_keys)
+
+    # finalize the tf_executor
+    stack.tf_executor.insert(display=True,
+                             **tf.get())
+
+    return stack.get_results()
