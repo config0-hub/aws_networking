@@ -7,7 +7,7 @@
 data "aws_caller_identity" "current" {}
 
 resource "aws_security_group" "this" {
-  name        = var.service_name
+  name        = "${service_name}-nat-inst"
   vpc_id      = var.vpc_id
   description = "Security group for NAT instance ${var.service_name}"
   tags        = local.common_tags
@@ -47,7 +47,7 @@ data "aws_subnet" "selected" {
 locals {
   common_tags = merge(
     {
-      Name = "nat-instance-${var.service_name}"
+      Name = "${var.service_name}-nat-inst"
     },
     var.cloud_tags,
   )
@@ -80,7 +80,7 @@ data "aws_ami" "this" {
 }
 
 resource "aws_launch_template" "this" {
-  name = var.service_name
+  name = "${service_name}-nat-inst"
   image_id    = var.image_id != "" ? var.image_id : data.aws_ami.this.id
   key_name    = var.ssh_key_name
 
@@ -126,7 +126,7 @@ resource "aws_launch_template" "this" {
 }
 
 resource "aws_autoscaling_group" "this" {
-  name         = var.service_name
+  name         = "${service_name}-nat-inst"
   desired_capacity    = var.enabled ? 1 : 0
   min_size            = var.enabled ? 1 : 0
   max_size            = 1
@@ -166,14 +166,14 @@ resource "aws_autoscaling_group" "this" {
 }
 
 resource "aws_iam_instance_profile" "this" {
-  name = var.service_name
+  name = "${service_name}-nat-inst"
   role        = aws_iam_role.this.name
 
   tags = local.common_tags
 }
 
 resource "aws_iam_role" "this" {
-  name        = var.service_name
+  name        = "${service_name}-nat-inst"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -199,7 +199,7 @@ resource "aws_iam_role_policy_attachment" "ssm" {
 
 resource "aws_iam_role_policy" "ec2" {
   role        = aws_iam_role.this.name
-  name = var.service_name
+  name = "${service_name}-nat-inst"
   policy      = <<EOF
 {
     "Version": "2012-10-17",
