@@ -18,6 +18,11 @@ def run(stackargs):
                              tags="tfvar",
                              types="str")
 
+    stack.parse.add_optional(key="aws_default_region",
+                             default="eu-west-1",
+                             tags="tfvar,db,resource,tf_runtime",
+                             types="str")
+
     # add execgroup
     stack.add_execgroup("config0-publish:::aws_networking::natgw_vpc",
                         "tf_execgroup")
