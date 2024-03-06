@@ -7,7 +7,7 @@
 data "aws_caller_identity" "current" {}
 
 resource "aws_security_group" "this" {
-  name        = "${service_name}-nat-inst"
+  name        = "${var.service_name}-nat-inst"
   vpc_id      = var.vpc_id
   description = "Security group for NAT instance ${var.service_name}"
   tags        = local.common_tags
