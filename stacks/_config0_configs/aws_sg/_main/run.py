@@ -82,7 +82,7 @@ def run(stackargs):
     stack.tf_executor.insert(display=True,
                              **tf.get())
 
-    # parse terraform and insert subnets
+    # parse terraform and insert security_group
     arguments = {
         "src_resource_type": "security_group",
         "src_provider": "aws",
@@ -94,7 +94,6 @@ def run(stackargs):
         "must_exists": True,
         "aws_default_region": stack.aws_default_region,
         "add_values": json.dumps({
-            "vpc_id": stack.vpc_id,
             "vpc": stack.vpc_name
         })
     }
