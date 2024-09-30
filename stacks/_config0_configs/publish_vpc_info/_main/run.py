@@ -11,7 +11,7 @@ def run(stackargs):
     stack.init_variables()
 
     # get vpc info
-    vpc_id = (name=stack.vpc_name,
+    vpc_id = stack.get_resource(name=stack.vpc_name,
                                 resource_type="vpc",
                                 must_exists=True)[0]["vpc_id"]
 
