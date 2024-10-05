@@ -15,16 +15,18 @@ def run(stackargs):
     stack.init_variables()
 
     # get vpc info - this is a bit dangerous b/c it assumes each vpc_name is unique
-    if not stack.vpc_id:
+    if not stack.get_attr("vpc_id"):
         vpc_id = stack.get_resource(name=stack.vpc_name,
                                     resource_type="vpc",
                                     must_exists=True)[0]["vpc_id"]
+
+        stack.set_variable("vpc_id", vpc_id)
 
     # get subnet info
     _lookup = {
         "provider": "aws",
         "resource_type": "subnet",
-        "vpc_id": vpc_id,
+        "vpc_id": stack.vpc_id,
         "search_keys": "vpc_id"
     }
 
@@ -37,7 +39,7 @@ def run(stackargs):
     _lookup = {
         "provider": "aws",
         "resource_type": "security_group",
-        "vpc_id": vpc_id,
+        "vpc_id": stack.vpc_id,
         "search_keys": "vpc_id"
     }
 
@@ -46,7 +48,7 @@ def run(stackargs):
     if not security_groups:
         stack.logger.error("security_groups not found to publish")
 
-    publish_info = {"vpc_id": vpc_id}
+    publish_info = {"vpc_id": stack.vpc_id}
 
     if security_groups:
 
