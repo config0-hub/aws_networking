@@ -7,13 +7,18 @@ def run(stackargs):
     stack.parse.add_required(key="vpc_name",
                              types="str")
 
+    stack.parse.add_optional(key="vpc_id",
+                             types="str",
+                             default="null")
+
     # init the stack namespace
     stack.init_variables()
 
-    # get vpc info
-    vpc_id = stack.get_resource(name=stack.vpc_name,
-                                resource_type="vpc",
-                                must_exists=True)[0]["vpc_id"]
+    # get vpc info - this is a bit dangerous b/c it assumes each vpc_name is unique
+    if not stack.vpc_id:
+        vpc_id = stack.get_resource(name=stack.vpc_name,
+                                    resource_type="vpc",
+                                    must_exists=True)[0]["vpc_id"]
 
     # get subnet info
     _lookup = {
@@ -73,3 +78,5 @@ def run(stackargs):
     stack.publish(publish_info)
 
     return stack.get_results()
+
+

@@ -15,6 +15,10 @@ def run(stackargs):
     stack.parse.add_optional(key="tier_level",
                              types="str,int")
 
+    stack.parse.add_optional(key="vpc_id",
+                             types="str",
+                             default="null")
+
     # if eks_cluster is specified, then add the correct tags to the vpc
     stack.parse.add_optional(key="eks_cluster",
                              types="str")
@@ -180,6 +184,9 @@ def run(stackargs):
     arguments = {"vpc_name": stack.vpc_name,
                  "aws_default_region": stack.aws_default_region}
 
+    if stack.get_attr("vpc_id"):
+        arguments["vpc_id"] = stack.vpc_id
+
     if stack.get_attr("cloud_tags_hash"):
         arguments["cloud_tags_hash"] = stack.cloud_tags_hash
 
@@ -196,6 +203,9 @@ def run(stackargs):
 
     # publish info on dashboard
     arguments = {"vpc_name": stack.vpc_name}
+
+    if stack.get_attr("vpc_id"):
+        arguments["vpc_id"] = stack.vpc_id
 
     inputargs = {
         "arguments": arguments,

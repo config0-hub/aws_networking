@@ -16,6 +16,11 @@ def run(stackargs):
                              default="3",
                              types="str")
 
+    stack.parse.add_optional(key="vpc_id",
+                             tags="tfvar,resource",
+                             types="str",
+                             default="null")
+
     stack.parse.add_optional(key="aws_default_region",
                              default="eu-west-1",
                              tags="tfvar,db,resource,tf_exec_env",
@@ -34,15 +39,16 @@ def run(stackargs):
     stack.init_execgroups()
     stack.init_substacks()
 
-    # get vpc info
-    vpc_id = (name=stack.vpc_name,
-                                resource_type="vpc",
-                                must_exists=True)[0]["vpc_id"]
+    # get vpc info - this is a bit dangerous b/c it assumes each vpc_name is unique
+    if not stack.vpc_id:
+        vpc_id = stack.get_resource(name=stack.vpc_name,
+                                    resource_type="vpc",
+                                    must_exists=True)[0]["vpc_id"]
 
-    # set variables
-    stack.set_variable("vpc_id", vpc_id,
-                       tags="tfvar,resource",
-                       types="str")
+        # set variables
+        stack.set_variable("vpc_id", vpc_id,
+                           tags="tfvar,resource",
+                           types="str")
 
     stack.set_variable("tf_main_name", "{}-security-group-tf".format(stack.vpc_name),
                        tags="tfvar,resource",
@@ -110,3 +116,5 @@ def run(stackargs):
     stack.parse_terraform.insert(**inputargs)
 
     return stack.get_results()
+
+

@@ -6,6 +6,7 @@ def run(stackargs):
     # Add default variables
     stack.parse.add_required(key="vpc_name")
 
+    stack.parse.add_optional(key="vpc_id")
     stack.parse.add_optional(key="tier_level")
     stack.parse.add_optional(key="vpc_tags")
     stack.parse.add_optional(key="nat_gw_tags")
@@ -27,7 +28,6 @@ def run(stackargs):
     # add substacks
     stack.add_substack('config0-publish:::aws_vpc')
     stack.add_substack('config0-publish:::aws_sg')
-    stack.add_substack('config0-publish:::publish_vpc_info')
 
     # init the stack namespace
     stack.init_variables()
@@ -95,7 +95,10 @@ def run(stackargs):
                          **inputargs)
 
     # Add security groups
-    arguments = {"vpc_name": stack.vpc_name}
+    arguments = {
+            "vpc_name": stack.vpc_name,
+            "vpc_id": stack.vpc_id
+            }
 
     if stack.get_attr("tier_level"):
         arguments["tier_level"] = stack.tier_level
