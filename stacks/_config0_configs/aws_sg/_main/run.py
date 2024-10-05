@@ -22,8 +22,8 @@ def run(stackargs):
                              types="str")
 
     # Add execgroup
-    stack.add_execgroup("config0-publish:::aws_networking::sg_2tier")
     stack.add_execgroup("config0-publish:::aws_networking::sg_3tier")
+    stack.add_execgroup("config0-publish:::aws_networking::sg_2tier")
 
     # Add substack
     stack.add_substack('config0-publish:::tf_executor')
@@ -106,6 +106,7 @@ def run(stackargs):
         "display": True}
 
     inputargs["display_hash"] = stack.get_hash_object(inputargs)
+
     stack.parse_terraform.insert(**inputargs)
 
     return stack.get_results()
