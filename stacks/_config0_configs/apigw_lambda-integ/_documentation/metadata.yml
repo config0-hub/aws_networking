@@ -1,0 +1,16 @@
+desc: This stack creates and configures API gateway lambda integration
+release: 0.0.1
+categories: 
+   - apigateway
+   - lambda
+   - serverless
+tags:
+   - aws
+   - infrastructure
+   - featured_infrastructure
+   - aws
+   - cloud
+   - public_cloud
+   - apigateway
+   - lambda
+   - serverless
