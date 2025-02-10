@@ -70,9 +70,7 @@ def run(stackargs):
         execgroup_name=stack.tf_execgroup_name,
         provider="aws",
         resource_name=f"{stack.vpc_name}-security-groups",
-        resource_type="security_group",
-        terraform_type="aws_security_group"
-    )
+        resource_type="security_group")
 
     tf.include(values={
         "aws_default_region":stack.aws_default_region,

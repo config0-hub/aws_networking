@@ -94,8 +94,7 @@ def run(stackargs):
                        execgroup_name=stack.tf_execgroup.name,
                        provider="aws",
                        resource_name=stack.service_name,
-                       resource_type="asg",
-                       terraform_type="aws_autoscaling_group")
+                       resource_type="asg")
 
     tf.include(keys=["id",
                      "arn",

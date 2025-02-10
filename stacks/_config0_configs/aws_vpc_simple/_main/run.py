@@ -84,8 +84,7 @@ def run(stackargs):
                        provider="aws",
                        tf_runtime="tofu:1.8.8",
                        resource_name=stack.vpc_name,
-                       resource_type="vpc",
-                       terraform_type="aws_vpc")
+                       resource_type="vpc")
 
     tf.include(values={
         "aws_default_region":stack.aws_default_region,

@@ -46,8 +46,7 @@ def run(stackargs):
                        execgroup_name=stack.tf_execgroup.name,
                        provider="aws",
                        resource_name=stack.nat_gateway_name,
-                       resource_type="nat_gateway",
-                       terraform_type="aws_nat_gateway")
+                       resource_type="nat_gateway")
 
     tf.include(keys=["id",
                      "connectivity_type",
