@@ -60,8 +60,7 @@ def run(stackargs):
                        execgroup_name=stack.tf_execgroup.name,
                        provider="aws",
                        resource_name=stack.apigateway_name,
-                       resource_type="apigateway_restapi_lambda",
-                       terraform_type="aws_api_gateway_rest_api")
+                       resource_type="apigateway_restapi_lambda")
 
     tf.include(keys=["name",
                      "arn",

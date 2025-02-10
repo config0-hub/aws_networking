@@ -48,13 +48,7 @@ def run(stackargs):
                            tags="tfvar,resource",
                            types="str")
 
-    stack.set_variable(
-        "_id",
-        f"sg-{stack.vpc_id}",
-        tags="resource",
-        types="str",
-    )
-
+    # either 2 or 3 tier
     if str(stack.tier_level) == "2":
         stack.set_variable("tf_execgroup_name", stack.sg_2tier.name)
     else:
@@ -74,7 +68,6 @@ def run(stackargs):
 
     tf.include(values={
         "aws_default_region":stack.aws_default_region,
-        "region":stack.aws_default_region,
         "name":f"{stack.vpc_name}-security-groups",
         "vpc_id":stack.vpc_id,
         "vpc":stack.vpc_name,

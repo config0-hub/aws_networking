@@ -55,8 +55,7 @@ def run(stackargs):
     # if we are using a vpc without a nat, the eks must be in public network
     # the internal lb must also be in public
     if stack.get_attr("eks_cluster"):
-        k8_key = f"kubernetes.io/cluster/{stack.eks_cluster}"
-        vpc_tags[k8_key] = "shared"
+        vpc_tags[f"kubernetes.io/cluster/{stack.eks_cluster}"] = "shared"
         public_subnet_tags["kubernetes.io/role/elb"] = "1"
         private_subnet_tags["kubernetes.io/role/internal_elb"] = "1"
 
@@ -78,7 +77,6 @@ def run(stackargs):
     stack.set_variable("timeout",600)
 
     # use the terraform constructor (helper)
-    # but this is optional
     tf = TFConstructor(stack=stack,
                        execgroup_name=stack.tf_execgroup.name,
                        provider="aws",
@@ -88,7 +86,6 @@ def run(stackargs):
 
     tf.include(values={
         "aws_default_region":stack.aws_default_region,
-        "region":stack.aws_default_region,
         "name":stack.vpc_name,
         "vpc":stack.vpc_name,
         "vpc_name":stack.vpc_name
@@ -98,7 +95,9 @@ def run(stackargs):
     stack.tf_executor.insert(display=True,
                              **tf.get())
 
+    ##################################
     # add security groups
+    ##################################
     arguments = {"vpc_name": stack.vpc_name,
                  "aws_default_region": stack.aws_default_region}
 
