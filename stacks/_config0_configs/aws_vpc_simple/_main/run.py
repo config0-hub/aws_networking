@@ -91,6 +91,11 @@ def run(stackargs):
         "vpc_name":stack.vpc_name
     })
 
+    # publish the info
+    tf.output(keys=["aws_default_region",
+                    "vpc_name",
+                    "vpc_id"])
+
     # finalize the tf_executor
     stack.tf_executor.insert(display=True,
                              **tf.get())

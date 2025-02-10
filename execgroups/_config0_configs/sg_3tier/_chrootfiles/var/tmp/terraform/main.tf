@@ -226,7 +226,6 @@ resource "aws_security_group_rule" "api_allow_udp" {
   source_security_group_id = "${aws_security_group.api.id}"
 }
 
-
 output "bastion_sg_id" {
   value = aws_security_group.bastion.id
 }

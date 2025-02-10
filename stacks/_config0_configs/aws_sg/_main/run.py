@@ -27,7 +27,6 @@ def run(stackargs):
 
     # Add execgroup
     stack.add_execgroup("config0-publish:::aws_networking::sg_3tier")
-    stack.add_execgroup("config0-publish:::aws_networking::sg_2tier")
 
     # Add substack
     stack.add_substack('config0-publish:::tf_executor')
@@ -48,12 +47,6 @@ def run(stackargs):
                            tags="tfvar,resource",
                            types="str")
 
-    # either 2 or 3 tier
-    if str(stack.tier_level) == "2":
-        stack.set_variable("tf_execgroup_name", stack.sg_2tier.name)
-    else:
-        stack.set_variable("tf_execgroup_name", stack.sg_3tier.name)
-
     stack.set_variable("timeout",600)
 
     # use the terraform constructor (helper)
@@ -61,7 +54,7 @@ def run(stackargs):
     tf = TFConstructor(
         stack=stack,
         tf_runtime="tofu:1.8.8",
-        execgroup_name=stack.tf_execgroup_name,
+        execgroup_name=stack.sg_3tier.name,
         provider="aws",
         resource_name=f"{stack.vpc_name}-security-groups",
         resource_type="security_group")
@@ -73,6 +66,15 @@ def run(stackargs):
         "vpc":stack.vpc_name,
         "vpc_name":stack.vpc_name
     })
+
+    # publish the info
+    tf.output(keys=["aws_default_region",
+                    "vpc_name",
+                    "bastion_sg_id",
+                    "web_sg_id",
+                    "api_sg_id",
+                    "db_sg_id",
+                    "vpc_id"])
 
     # finalize the tf_executor
     stack.tf_executor.insert(display=True,
