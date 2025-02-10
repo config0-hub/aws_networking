@@ -5,11 +5,13 @@ variable "aws_default_region" {
 variable "vpc_name" {
   type        = string
   description = "vpc name"
+  default     = "default_vpc_name_config0"
 }
 
 variable "vpc_tags" {
   description = "VPC resource tags"
   type        = map(string)
+  default     = {}
 }
 
 variable "public_subnet_tags" {
