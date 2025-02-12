@@ -48,12 +48,6 @@ def run(stackargs):
                        resource_name=stack.nat_gateway_name,
                        resource_type="nat_gateway")
 
-    tf.include(keys=["connectivity_type",
-                     "network_interface_id",
-                     "private_ip",
-                     "public_ip",
-                     "allocation_id"])
-
     tf.include(values={
         "aws_default_region":stack.aws_default_region,
         "name":stack.nat_gateway_name,
