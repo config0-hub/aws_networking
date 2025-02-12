@@ -6,7 +6,7 @@
 
 data "aws_caller_identity" "current" {}
 
-resource "aws_security_group" "this" {
+resource "aws_security_group" "default" {
   name        = "${var.service_name}-nat-inst"
   vpc_id      = var.vpc_id
   description = "Security group for NAT instance ${var.service_name}"
@@ -14,7 +14,7 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_security_group_rule" "egress" {
-  security_group_id = aws_security_group.this.id
+  security_group_id = aws_security_group.default.id
   type              = "egress"
   cidr_blocks       = ["0.0.0.0/0"]
   from_port         = 0
@@ -23,7 +23,7 @@ resource "aws_security_group_rule" "egress" {
 }
 
 resource "aws_security_group_rule" "ingress_any" {
-  security_group_id = aws_security_group.this.id
+  security_group_id = aws_security_group.default.id
   type              = "ingress"
   cidr_blocks       = var.private_cidr_ingress_accept
   from_port         = 0
@@ -32,16 +32,12 @@ resource "aws_security_group_rule" "ingress_any" {
 }
 
 resource "aws_security_group_rule" "ssh" {
-  security_group_id = aws_security_group.this.id
+  security_group_id = aws_security_group.default.id
   type              = "ingress"
   cidr_blocks       = ["0.0.0.0/0"]
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-}
-
-data "aws_subnet" "selected" {
-  id = var.public_subnet_id
 }
 
 locals {
@@ -54,7 +50,7 @@ locals {
 }
 
 # AMI of the latest Amazon Linux 2 
-data "aws_ami" "this" {
+data "aws_ami" "default" {
   most_recent = true
   owners      = ["amazon"]
   filter {
@@ -79,13 +75,13 @@ data "aws_ami" "this" {
   }
 }
 
-resource "aws_launch_template" "this" {
+resource "aws_launch_template" "default" {
   name = "${var.service_name}-nat-inst"
-  image_id    = var.image_id != "" ? var.image_id : data.aws_ami.this.id
+  image_id    = var.image_id != "" ? var.image_id : data.aws_ami.default.id
   key_name    = var.ssh_key_name
 
   iam_instance_profile {
-    arn = aws_iam_instance_profile.this.arn
+    arn = aws_iam_instance_profile.default.arn
   }
 
   metadata_options {
@@ -95,7 +91,7 @@ resource "aws_launch_template" "this" {
 
   network_interfaces {
     associate_public_ip_address = true
-    security_groups             = [aws_security_group.this.id]
+    security_groups             = [aws_security_group.default.id]
     delete_on_termination       = true
   }
 
@@ -125,7 +121,7 @@ resource "aws_launch_template" "this" {
   tags        = local.common_tags
 }
 
-resource "aws_autoscaling_group" "this" {
+resource "aws_autoscaling_group" "default" {
   name         = "${var.service_name}-nat-inst"
   desired_capacity    = var.enabled ? 1 : 0
   min_size            = var.enabled ? 1 : 0
@@ -139,7 +135,7 @@ resource "aws_autoscaling_group" "this" {
     }
     launch_template {
       launch_template_specification {
-        launch_template_id = aws_launch_template.this.id
+        launch_template_id = aws_launch_template.default.id
         version            = "$Latest"
       }
       dynamic "override" {
@@ -165,14 +161,14 @@ resource "aws_autoscaling_group" "this" {
   }
 }
 
-resource "aws_iam_instance_profile" "this" {
+resource "aws_iam_instance_profile" "default" {
   name = "${var.service_name}-nat-inst"
-  role        = aws_iam_role.this.name
+  role        = aws_iam_role.default.name
 
   tags = local.common_tags
 }
 
-resource "aws_iam_role" "this" {
+resource "aws_iam_role" "default" {
   name        = "${var.service_name}-nat-inst"
   assume_role_policy = <<EOF
 {
@@ -194,11 +190,11 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "ssm" {
   policy_arn = var.ssm_policy_arn
-  role       = aws_iam_role.this.name
+  role       = aws_iam_role.default.name
 }
 
 resource "aws_iam_role_policy" "ec2" {
-  role        = aws_iam_role.this.name
+  role        = aws_iam_role.default.name
   name = "${var.service_name}-nat-inst"
   policy      = <<EOF
 {
@@ -226,4 +222,8 @@ resource "aws_iam_role_policy" "ec2" {
     ]
 }
 EOF
+}
+
+output "arn" {
+  value = aws_autoscaling_group.default.arn
 }

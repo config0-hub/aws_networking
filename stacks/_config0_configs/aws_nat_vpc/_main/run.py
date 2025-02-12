@@ -48,23 +48,23 @@ def run(stackargs):
                        resource_name=stack.nat_gateway_name,
                        resource_type="nat_gateway")
 
-    tf.include(keys=["id",
-                     "connectivity_type",
+    tf.include(keys=["connectivity_type",
                      "network_interface_id",
                      "private_ip",
                      "public_ip",
                      "allocation_id"])
 
-    # we should identify this gateway by giving it a name in the db table
-    tf.include(values={"name":stack.nat_gateway_name,
-                       "nat_gateway_name":stack.nat_gateway_name})
+    tf.include(values={
+        "aws_default_region":stack.aws_default_region,
+        "name":stack.nat_gateway_name,
+        "nat_gateway_name":stack.nat_gateway_name,
+    })
 
-    output_keys = ["public_ip",
-                   "private_ip",
-                   "network_interface_id",
-                   "allocation_id"]
-
-    tf.output(keys=output_keys)
+    tf.output(keys=["connectivity_type",
+                    "network_interface_id",
+                    "private_ip",
+                    "public_ip",
+                    "allocation_id"])
 
     # finalize the tf_executor
     stack.tf_executor.insert(display=True,

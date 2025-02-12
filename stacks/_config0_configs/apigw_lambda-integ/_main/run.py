@@ -62,20 +62,12 @@ def run(stackargs):
                        resource_name=stack.apigateway_name,
                        resource_type="apigateway_restapi_lambda")
 
-    tf.include(keys=["name",
-                     "arn",
-                     "description",
-                     "execution_arn",
-                     "root_resource_id",
-                     "id"])
+    tf.include(values={
+        "aws_default_region":stack.aws_default_region,
+        "name":stack.apigateway_name
+    })
 
-    tf.include(maps={"gateway_id": "arn"})
-
-    tf.output(keys=["name",
-                    "arn",
-                    "execution_arn",
-                    "root_resource_id",
-                    "id"])
+    tf.output(keys=["base_url","arn"])
 
     # finalize the tf_executor
     stack.tf_executor.insert(display=True,

@@ -55,8 +55,6 @@ resource "aws_api_gateway_integration" "lambda_non_root" {
    integration_http_method = "POST"
    type                    = "AWS_PROXY"
    uri                     = var.lambda_invoke_arn
-   #uri                     = "arn:aws:apigateway:${var.aws_default_region}:lambda:path/2015-03-31/functions/${var.lambda_arn}/invocations"
-
 }
 
 resource "aws_api_gateway_method" "post_root" {
@@ -74,8 +72,6 @@ resource "aws_api_gateway_integration" "lambda_root" {
    integration_http_method = "POST"
    type                    = "AWS_PROXY"
    uri                     = var.lambda_invoke_arn
-   #uri                     = "arn:aws:apigateway:${var.aws_default_region}:lambda:path/2015-03-31/functions/${var.lambda_arn}/invocations"
-
 }
 
 resource "aws_api_gateway_method_response" "response_200" {
@@ -123,4 +119,8 @@ resource "aws_api_gateway_deployment" "default" {
 
 output "base_url" {
   value = "${aws_api_gateway_deployment.default.invoke_url}/${var.resource_name}"
+}
+
+output "arn" {
+  value = aws_api_gateway_rest_api.default.execution_arn
 }

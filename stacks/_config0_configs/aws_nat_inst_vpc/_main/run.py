@@ -33,11 +33,6 @@ def run(stackargs):
                              default="null",
                              types="str")
 
-    stack.parse.add_optional(key="use_spot_instance",
-                             default=True,
-                             tags="tfvar",
-                             types="bool")
-
     stack.parse.add_optional(key="aws_default_region",
                              default="eu-west-1",
                              tags="tfvar,db,resource,tf_exec_env",
@@ -83,11 +78,6 @@ def run(stackargs):
                        tags = "tfvar",
                        types = "list")
 
-    # use spot instances
-    #stack.set_variable("use_spot_instance",
-    #                   true,
-    #                   tags="tfvar",
-    #                   types="bool")
 
     # resource type is asg since the nat instances are vms in asg
     tf = TFConstructor(stack=stack,
@@ -96,20 +86,12 @@ def run(stackargs):
                        resource_name=stack.service_name,
                        resource_type="asg")
 
-    tf.include(keys=["id",
-                     "arn",
-                     "max_size",
-                     "service_linked_role_arn",
-                     "min_size"])
+    tf.include(values={
+        "aws_default_region":stack.aws_default_region,
+        "nat_instance_name":stack.service_name,
+    })
 
-    # we should identify this gateway by giving it a name in the db table
-    tf.include(values={"name":stack.service_name,
-                       "nat_instance_name":stack.service_name})
-
-    output_keys = ["arn",
-                   "name" ]
-
-    tf.output(keys=output_keys)
+    tf.output(keys=["arn", "nat_instance_name"])
 
     # finalize the tf_executor
     stack.tf_executor.insert(display=True,
