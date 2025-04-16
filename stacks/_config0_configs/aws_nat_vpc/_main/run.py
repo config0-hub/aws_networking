@@ -48,8 +48,12 @@ def run(stackargs):
     # add substack
     stack.add_substack("config0-publish:::tf_executor")
 
+    stack.add_shelloutconfig('config0-publish:::mongodb::create_keys')
+
+
     # initialize
     stack.init_variables()
+    stack.init_shelloutconfigs()
     stack.init_execgroups()
     stack.init_substacks()
 
