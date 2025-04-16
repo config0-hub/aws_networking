@@ -83,3 +83,4 @@ variable "ssm_policy_arn" {
   default     = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
+
