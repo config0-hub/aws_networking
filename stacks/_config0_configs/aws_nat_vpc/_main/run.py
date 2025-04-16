@@ -41,15 +41,15 @@ def run(stackargs):
                              tags="tfvar,db,resource,tf_exec_env",
                              types="str")
 
+    stack.add_shelloutconfig('config0-publish:::terraform::resource_wrapper')
+    stack.add_shelloutconfig('config0-publish:::terraform::transfer_db_results')
+
     # add execgroup
     stack.add_execgroup("config0-publish:::aws_networking::natgw_vpc",
                         "tf_execgroup")
 
     # add substack
     stack.add_substack("config0-publish:::tf_executor")
-
-    stack.add_shelloutconfig('config0-publish:::terraform::resource_wrapper')
-
 
     # initialize
     stack.init_variables()
