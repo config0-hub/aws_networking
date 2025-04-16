@@ -48,7 +48,7 @@ def run(stackargs):
     # add substack
     stack.add_substack("config0-publish:::tf_executor")
 
-    stack.add_shelloutconfig('config0-publish:::mongodb::create_keys')
+    stack.add_shelloutconfig('config0-publish:::terraform::resource_wrapper')
 
 
     # initialize
