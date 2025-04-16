@@ -78,3 +78,4 @@ variable "cloud_tags" {
   type        = map(string)
   default     = {}
 }
+
