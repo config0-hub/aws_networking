@@ -2,7 +2,7 @@ def default():
     return {
         'method': 'shelloutconfig',
         'metadata': {
-            'env_vars': [],
-            'shelloutconfigs': ['config0-publish:::terraform::resource_wrapper']
+            'shelloutconfigs': ['config0-publish:::terraform::resource_wrapper'],
+            'env_vars': ['config0-publish:::docker::build.env']
         }
     }
