@@ -1,0 +1,13 @@
+desc: This adds an AWS Nat Gateway to an existing VPC.
+release: 0.0.1
+author: Gary Leong <gary@config0.com>
+license: GNU General Public License v3.0
+categories: 
+   - networking
+   - nat
+tags:
+   - nat
+   - infrastructure
+   - aws
+   - cloud
+   - public_cloud

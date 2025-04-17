@@ -86,16 +86,3 @@ variable "private_subnet_tags" {
   description = "private subnet tags"
   type        = map(string)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
