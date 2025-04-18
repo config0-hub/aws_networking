@@ -1,4 +1,4 @@
-desc: Creates an API Gateway that integrates with an AWS Lambda function
+desc: Creates an API Gateway REST API that integrates with an existing Lambda function
 release: 0.0.1
 author: Gary Leong <gary@config0.com>
 license: GNU General Public License v3.0
@@ -10,7 +10,6 @@ tags:
    - aws
    - infrastructure
    - featured_infrastructure
-   - aws
    - cloud
    - public_cloud
    - apigateway

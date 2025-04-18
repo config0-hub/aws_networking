@@ -17,6 +17,7 @@
 
 from config0_publisher.terraform import TFConstructor
 
+
 def run(stackargs):
 
     # instantiate authoring stack

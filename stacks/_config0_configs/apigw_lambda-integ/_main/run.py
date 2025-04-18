@@ -18,9 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from config0_publisher.terraform import TFConstructor
 
 
-# lookup lambda execution arn
 def _get_lambda_arn(stack):
-
+    """Lookup lambda execution ARN by name and region."""
     _lookup = {
         "must_exists": True,
         "resource_type": "aws_lambda",
@@ -73,8 +72,7 @@ def run(stackargs):
 
     stack.set_variable("timeout", 600)
 
-    # use the terraform constructor (helper)
-    # but this is optional
+    # Use the terraform constructor (helper)
     tf = TFConstructor(stack=stack,
                        execgroup_name=stack.tf_execgroup.name,
                        provider="aws",
@@ -88,7 +86,7 @@ def run(stackargs):
 
     tf.output(keys=["base_url", "arn"])
 
-    # finalize the tf_executor
+    # Finalize the tf_executor
     stack.tf_executor.insert(display=True,
                              **tf.get())
 

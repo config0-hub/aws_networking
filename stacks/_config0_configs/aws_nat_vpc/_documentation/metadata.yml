@@ -1,4 +1,4 @@
-desc: This adds an AWS Nat Gateway to an existing VPC.
+desc: Creates an AWS NAT Gateway in a public subnet and configures it for private subnet routing
 release: 0.0.1
 author: Gary Leong <gary@config0.com>
 license: GNU General Public License v3.0
