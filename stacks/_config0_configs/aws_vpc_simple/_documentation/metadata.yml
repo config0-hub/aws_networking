@@ -1,45 +1,18 @@
-desc: yoyo
+desc: Creates a simple VPC on AWS with appropriate security groups
 release: 0.0.1
-author: yo yo <gary@config0.com>
-license: GNU General Public License v3.0
+author: Gary Leong <gary@config0.com>
+license: GPL-3.0
 categories: 
    - aws
-   - codebuild
    - cloud
    - public_cloud
 tags:
-   - codebuild
-   - host
+   - vpc
+   - private_networking
+   - networking
+   - config0-core
+   - config0_saas
+   - sandbox
+   - config0
    - aws
    - infrastructure
-   - featured
-   - ci
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
