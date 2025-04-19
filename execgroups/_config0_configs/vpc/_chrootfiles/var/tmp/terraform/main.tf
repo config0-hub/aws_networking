@@ -1,27 +1,7 @@
-# get all available AZs in our region
-data "aws_availability_zones" "available_azs" {
-  state = "available"
-}
-
-# reserve Elastic IP to be used in our NAT gateway
-resource "aws_eip" "nat_gw_elastic_ip" {
-  vpc = true
-
-  tags = merge(
-    var.nat_gw_tags,
-    var.cloud_tags,
-    {
-      Name            = var.vpc_name
-      iac_environment = var.environment
-      environment     = var.environment
-    },
-  )
-}
-
 # create VPC using the official AWS module
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.78.0"
+  version = "5.1.2" # Updated to a more recent version compatible with OpenTofu 1.8.8
 
   name = var.vpc_name
   cidr = var.main_network_block
@@ -50,7 +30,7 @@ module "vpc" {
   reuse_nat_ips          = var.reuse_nat_ips
   external_nat_ip_ids    = [aws_eip.nat_gw_elastic_ip.id]
 
-  # add VPC/Subnet tags required by EKS (eks)
+  # add VPC/Subnet tags required by EKS
   tags = merge(
     var.vpc_tags,
     var.cloud_tags,

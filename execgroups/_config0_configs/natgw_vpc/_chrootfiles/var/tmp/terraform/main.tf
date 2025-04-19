@@ -1,3 +1,6 @@
+# NAT Gateway Configuration
+# Allows instances in private subnets to connect to the internet
+
 resource "aws_nat_gateway" "nat_gateway" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = var.public_subnet_id
@@ -11,7 +14,7 @@ resource "aws_nat_gateway" "nat_gateway" {
 }
 
 resource "aws_eip" "nat_eip" {
-  vpc = true
+  domain = "vpc" # Updated from 'vpc = true' to match OpenTofu 1.8.8 standard
 }
 
 resource "aws_route" "private_route" {
@@ -20,22 +23,3 @@ resource "aws_route" "private_route" {
   nat_gateway_id         = aws_nat_gateway.nat_gateway.id
 }
 
-output "connectivity_type" {
-  value = aws_nat_gateway.nat_gateway.connectivity_type
-}
-
-output "network_interface_id" {
-  value = aws_nat_gateway.nat_gateway.network_interface_id
-}
-
-output "private_ip" {
-  value = aws_nat_gateway.nat_gateway.private_ip
-}
-
-output "public_ip" {
-  value = aws_nat_gateway.nat_gateway.public_ip
-}
-
-output "allocation_id" {
-  value = aws_nat_gateway.nat_gateway.allocation_id
-}

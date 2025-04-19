@@ -1,19 +1,21 @@
 variable "vpc_name" {
   type        = string
-  description = "vpc name"
+  description = "Name of the VPC where security groups will be created"
 }
 
 variable "vpc_id" {
   type        = string
-  description = "vpc id"
+  description = "ID of the VPC where security groups will be created"
 }
 
 variable "aws_default_region" {
-  default = "us-east-1"
+  type        = string
+  description = "Default AWS region for resource deployment"
+  default     = "us-east-1"
 }
 
 variable "cloud_tags" {
-  description = "additional tags as a map"
+  description = "Additional tags to apply to all resources as a map"
   type        = map(string)
   default     = {}
 }
