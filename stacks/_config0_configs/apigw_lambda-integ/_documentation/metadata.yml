@@ -1,0 +1,17 @@
+desc: Creates an API Gateway REST API that integrates with an existing Lambda function
+release: 0.0.1
+author: Gary Leong <gary@config0.com>
+license: GNU General Public License v3.0
+categories: 
+   - apigateway
+   - lambda
+   - serverless
+tags:
+   - aws
+   - infrastructure
+   - featured_infrastructure
+   - cloud
+   - public_cloud
+   - apigateway
+   - lambda
+   - serverless
