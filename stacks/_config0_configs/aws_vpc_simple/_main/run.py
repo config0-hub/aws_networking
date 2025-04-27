@@ -97,7 +97,7 @@ def run(stackargs):
     tf = TFConstructor(stack=stack,
                        execgroup_name=stack.tf_execgroup.name,
                        provider="aws",
-                       tf_runtime="tofu:1.8.8",
+                       tf_runtime="tofu:1.9.1",
                        resource_name=stack.vpc_name,
                        resource_type="vpc")
 
