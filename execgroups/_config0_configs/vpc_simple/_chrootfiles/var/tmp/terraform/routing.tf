@@ -17,7 +17,6 @@ resource "aws_default_route_table" "public" {
 }
 
 resource "aws_route" "public_internet_gateway" {
-  count                  = length(local.public_subnets)
   route_table_id         = aws_default_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.this.id
@@ -28,8 +27,8 @@ resource "aws_route" "public_internet_gateway" {
 }
 
 resource "aws_route_table_association" "public" {
-  count          = length(local.public_subnets)
-  subnet_id      = element(aws_subnet.public.*.id, count.index)
+  for_each       = local.public_subnets
+  subnet_id      = aws_subnet.public[each.key].id
   route_table_id = aws_default_route_table.public.id
 }
 
@@ -51,8 +50,7 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "private" {
-  count          = length(local.private_subnets)
-  subnet_id      = element(aws_subnet.private.*.id, count.index)
+  for_each       = local.private_subnets
+  subnet_id      = aws_subnet.private[each.key].id
   route_table_id = aws_route_table.private.id
 }
-

@@ -35,11 +35,38 @@ output "private_route_table_id" {
 
 output "public_subnet_ids" {
   description = "Comma-separated list of public subnet IDs"
-  value       = join(",", aws_subnet.public[*].id)
+  value       = join(",", [for subnet in aws_subnet.public : subnet.id])
 }
 
 output "private_subnet_ids" {
   description = "Comma-separated list of private subnet IDs"
-  value       = join(",", aws_subnet.private[*].id)
+  value       = join(",", [for subnet in aws_subnet.private : subnet.id])
 }
 
+# Additional helpful outputs
+output "public_subnets" {
+  description = "Map of public subnet details"
+  value = {
+    for az, subnet in aws_subnet.public : az => {
+      id   = subnet.id
+      cidr = subnet.cidr_block
+      az   = subnet.availability_zone
+    }
+  }
+}
+
+output "private_subnets" {
+  description = "Map of private subnet details"
+  value = {
+    for az, subnet in aws_subnet.private : az => {
+      id   = subnet.id
+      cidr = subnet.cidr_block
+      az   = subnet.availability_zone
+    }
+  }
+}
+
+output "availability_zones" {
+  description = "List of availability zones used"
+  value       = local.azs
+}

@@ -33,3 +33,18 @@ variable "cloud_tags" {
   description = "Global tags to apply to all resources"
   default     = {}
 }
+
+variable "base_cidr" {
+  type        = string
+  description = "The base cidr for subnets"
+  default     = "10.11"
+}
+
+variable "num_of_subnets" {
+  type        = number
+  description = "The number of subnets"
+  default     = 2
+}
+
+
+
