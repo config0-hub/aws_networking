@@ -23,15 +23,14 @@ This stack creates an AWS Virtual Private Cloud (VPC) with appropriate security 
 ## Dependencies
 
 ### Substacks
-- [config0-publish:::tf_executor](http://config0.http.redirects.s3-website-us-east-1.amazonaws.com/assets/stacks/config0-publish/tf_executor/default)
-- [config0-publish:::aws_sg](http://config0.http.redirects.s3-website-us-east-1.amazonaws.com/assets/stacks/config0-publish/aws_sg/default)
+- [config0-publish:::tf_executor](https://api-app.config0.com/web_api/v1.0/stacks/config0-publish/tf_executor)
+- [config0-publish:::aws_sg](https://api-app.config0.com/web_api/v1.0/stacks/config0-publish/aws_sg)
 
 ### Execgroups
-- [config0-publish:::aws_networking::vpc_simple](http://config0.http.redirects.s3-website-us-east-1.amazonaws.com/assets/exec/groups/config0-publish/aws_networking/vpc_simple/default)
+- [config0-publish:::aws_networking::vpc_simple](https://api-app.config0.com/web_api/v1.0/exec/groups/config0-publish/aws_networking/vpc_simple)
 
 ### Shelloutconfigs
-- [config0-publish:::terraform::resource_wrapper](http://config0.http.redirects.s3-website-us-east-1.amazonaws.com/assets/shelloutconfigs/config0-publish/terraform/resource_wrapper/default)
-- [config0-publish:::github::lambda_trigger_stepf](http://config0.http.redirects.s3-website-us-east-1.amazonaws.com/assets/shelloutconfigs/config0-publish/github/lambda_trigger_stepf/default)
+None
 
 ## License
 <pre>
