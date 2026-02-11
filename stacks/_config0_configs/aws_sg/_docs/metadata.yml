@@ -1,0 +1,20 @@
+desc: Creates security groups for a three-tier architecture in AWS, organizing them for bastion, web, API, and database tiers.
+release: 0.0.1
+author: Gary Leong <gary@config0.com>
+license: GNU General Public License v3.0
+categories:
+   - aws
+   - cloud
+   - public_cloud
+tags:
+   - vpc
+   - security_group
+   - private_networking
+   - networking
+   - database
+   - config0-core
+   - config0_saas
+   - web
+   - config0
+   - aws
+   - infrastructure

@@ -1,0 +1,13 @@
+desc: This adds an AWS NAT Instance with Auto Scaling Group to an existing VPC for private subnet internet access.
+release: 0.0.1
+author: Gary Leong <gary@config0.com>
+license: GPL-3.0
+categories: 
+   - networking
+   - nat
+tags:
+   - nat
+   - infrastructure
+   - aws
+   - cloud
+   - public_cloud
