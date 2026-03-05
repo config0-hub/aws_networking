@@ -57,11 +57,11 @@ def run(stackargs):
                              types="str")
 
     # add execgroup
-    stack.add_execgroup("config0-publish:::aws_networking::nat_inst_vpc",
+    stack.add_execgroup("config0-hub:::aws_networking::nat_inst_vpc",
                         "tf_execgroup")
 
     # add substack
-    stack.add_substack("config0-publish:::tf_executor")
+    stack.add_substack("config0-hub:::config0_core::tf_executor")
 
     # initialize
     stack.init_variables()

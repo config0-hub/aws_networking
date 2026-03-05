@@ -23,13 +23,13 @@ This stack creates an AWS Virtual Private Cloud (VPC) with appropriate security 
 ## Dependencies
 
 ### Substacks
-- [config0-publish:::tf_executor](https://api-app.config0.com/web_api/v1.0/stacks/config0-publish/tf_executor)
-- [config0-publish:::aws_sg](https://api-app.config0.com/web_api/v1.0/stacks/config0-publish/aws_sg)
+- [config0-hub:::config0_core::tf_executor](https://api-app.config0.com/web_api/v1.0/stacks/config0-hub/tf_executor)
+- [config0-hub:::aws_networking::aws_sg](https://api-app.config0.com/web_api/v1.0/stacks/config0-hub/aws_sg)
 
 ### Execgroups
-- [config0-publish:::aws_networking::vpc_simple](https://api-app.config0.com/web_api/v1.0/exec/groups/config0-publish/aws_networking/vpc_simple)
+- [config0-hub:::aws_networking::vpc_simple](https://api-app.config0.com/web_api/v1.0/exec/groups/config0-hub/aws_networking/vpc_simple)
 
-### Shelloutconfigs
+### Scripts
 None
 
 ## License
