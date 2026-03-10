@@ -1,18 +1,16 @@
 desc: Creates an AWS Virtual Private Cloud (VPC) with security groups and optional EKS cluster support
-release: 0.0.1
+release: 0.5.0
 author: Gary Leong <gary@config0.com>
 license: GPL-3.0
-categories: 
+categories:
    - aws
-   - cloud
-   - public_cloud
+   - vpc
+   - terraform
+   - infrastructure
 tags:
    - vpc
-   - private_networking
-   - networking
-   - config0-core
-   - config0_saas
-   - sandbox
-   - config0
    - aws
-   - infrastructure
+   - terraform
+   - networking
+   - eks
+   - featured
