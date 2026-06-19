@@ -54,7 +54,9 @@ def run(stackargs):
     stack.init_substacks()
 
     # get vpc info - this is a bit dangerous b/c it assumes each vpc_name is unique
-    if not stack.vpc_id:
+    # vpc_id defaults to the literal "null" (a truthy string), so guard on it too —
+    # otherwise the lookup is skipped and the SG deploys against vpc_id="null".
+    if not stack.vpc_id or stack.vpc_id == "null":
         vpc_id = stack.get_resource(name=stack.vpc_name,
                                     resource_type="vpc",
                                     must_exists=True)[0]["vpc_id"]

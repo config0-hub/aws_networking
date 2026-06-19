@@ -49,7 +49,7 @@ def run(stackargs):
                              types="str")
 
     # Add execgroup
-    stack.add_execgroup("config0-hub:::aws_networking::vpc_simple", 
+    stack.add_execgroup("config0-hub:::aws_networking::vpc_simple",
                         "tf_execgroup")
 
     # Add substack
@@ -81,12 +81,12 @@ def run(stackargs):
                        tags="tfvar",
                        types="dict")
 
-    stack.set_variable("public_subnet_tags", 
+    stack.set_variable("public_subnet_tags",
                        public_subnet_tags,
                        tags="tfvar",
                        types="dict")
 
-    stack.set_variable("private_subnet_tags", 
+    stack.set_variable("private_subnet_tags",
                        private_subnet_tags,
                        tags="tfvar",
                        types="dict")
@@ -106,6 +106,17 @@ def run(stackargs):
         "name": stack.vpc_name,
         "vpc": stack.vpc_name,
         "vpc_name": stack.vpc_name
+    })
+
+    # Stamp region label so selector match.keys.region resolves this resource.
+    # The canonical key is "region" (the short form used by selectors); the stack
+    # input arrives as "aws_default_region" — normalize here, authoring-side, so
+    # config0_publisher stays provider-agnostic.
+    tf.include(values={
+        "labels": {
+            "region": stack.aws_default_region,
+            "provider": "aws",
+        }
     })
 
     # publish the info
