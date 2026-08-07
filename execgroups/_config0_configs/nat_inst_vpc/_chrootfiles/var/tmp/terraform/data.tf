@@ -1,5 +1,9 @@
 data "aws_caller_identity" "current" {}
 
+data "aws_vpc" "selected" {
+  id = var.vpc_id
+}
+
 # AMI of the latest Amazon Linux 2 
 data "aws_ami" "default" {
   most_recent = true

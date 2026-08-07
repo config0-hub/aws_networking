@@ -17,7 +17,7 @@ resource "aws_security_group_rule" "egress" {
 resource "aws_security_group_rule" "ingress_any" {
   security_group_id = aws_security_group.default.id
   type              = "ingress"
-  cidr_blocks       = var.private_cidr_ingress_accept
+  cidr_blocks       = [data.aws_vpc.selected.cidr_block]
   from_port         = 0
   to_port           = 65535
   protocol          = "all"
