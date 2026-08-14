@@ -52,5 +52,11 @@ variable "enable_ssm_endpoints" {
   default     = false
 }
 
+variable "enable_nat_gateway" {
+  type        = bool
+  description = "Opt-in: create a NAT gateway (with EIP) in the first public subnet and route private-subnet egress through it, for hosts that need public package repositories"
+  default     = false
+}
+
 
 

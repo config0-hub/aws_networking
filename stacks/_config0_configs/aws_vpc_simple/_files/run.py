@@ -51,6 +51,14 @@ def run(stackargs):
                              tags="tfvar",
                              types="bool")
 
+    # opt-in NAT gateway - NAT only where the user package needs public
+    # package repositories; default false leaves existing consumers unchanged
+    # we need to use string value for false b/c tfvar
+    stack.parse.add_optional(key="enable_nat_gateway",
+                             default="false",
+                             tags="tfvar",
+                             types="bool")
+
     # docker image to execute terraform with
     stack.parse.add_optional(key="aws_default_region",
                              default="eu-west-1",
