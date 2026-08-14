@@ -46,5 +46,11 @@ variable "num_of_subnets" {
   default     = 2
 }
 
+variable "enable_ssm_endpoints" {
+  type        = bool
+  description = "Opt-in: create ssm/ssmmessages/ec2messages interface endpoints for no-public-IP SSM-managed hosts"
+  default     = false
+}
+
 
 

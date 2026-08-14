@@ -42,6 +42,15 @@ def run(stackargs):
     stack.parse.add_optional(key="eks_cluster",
                              types="str")
 
+    # opt-in SSM interface endpoints (ssm/ssmmessages/ec2messages) for
+    # no-public-IP SSM-managed hosts; default false leaves existing
+    # consumers unchanged
+    # we need to use string value for false b/c tfvar
+    stack.parse.add_optional(key="enable_ssm_endpoints",
+                             default="false",
+                             tags="tfvar",
+                             types="bool")
+
     # docker image to execute terraform with
     stack.parse.add_optional(key="aws_default_region",
                              default="eu-west-1",
