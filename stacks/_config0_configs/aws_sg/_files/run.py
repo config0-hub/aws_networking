@@ -72,7 +72,7 @@ def run(stackargs):
     # but this is optional
     tf = TFConstructor(
         stack=stack,
-        tf_runtime="tofu:1.9.1",
+        tf_runtime="tofu:1.10.6",
         execgroup_name=stack.sg_3tier.name,
         provider="aws",
         resource_name=f"{stack.vpc_name}-security-groups",
