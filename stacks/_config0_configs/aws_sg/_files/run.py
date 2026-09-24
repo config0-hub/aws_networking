@@ -42,6 +42,14 @@ def run(stackargs):
                              tags="tfvar,db,resource,tf_exec_env",
                              types="str")
 
+    # optional base for the security-group names; defaults to vpc_name below,
+    # so existing callers (incl. aws_vpc_simple's substack insert) see no change.
+    # set it when a scenario owns its own groups inside a vpc that already
+    # carries the vpc stack's groups - aws group names are unique per vpc
+    stack.parse.add_optional(key="sg_name",
+                             tags="tfvar,db,resource",
+                             types="str")
+
     # Add execgroup
     stack.add_execgroup("config0-hub:::aws_networking::sg_3tier")
 
@@ -66,6 +74,11 @@ def run(stackargs):
                            tags="tfvar,resource",
                            types="str")
 
+    if not stack.get_attr("sg_name"):
+        stack.set_variable("sg_name", stack.vpc_name,
+                           tags="tfvar,db,resource",
+                           types="str")
+
     stack.set_variable("timeout", 600)
 
     # use the terraform constructor (helper)
@@ -75,12 +88,13 @@ def run(stackargs):
         tf_runtime="tofu:1.10.6",
         execgroup_name=stack.sg_3tier.name,
         provider="aws",
-        resource_name=f"{stack.vpc_name}-security-groups",
+        resource_name=f"{stack.sg_name}-security-groups",
         resource_type="security_group")
 
     tf.include(values={
         "aws_default_region": stack.aws_default_region,
-        "name": f"{stack.vpc_name}-security-groups",
+        "name": f"{stack.sg_name}-security-groups",
+        "sg_name": stack.sg_name,
         "vpc_id": stack.vpc_id,
         "vpc": stack.vpc_name,
         "vpc_name": stack.vpc_name
@@ -89,6 +103,7 @@ def run(stackargs):
     # publish the info
     tf.output(keys=["aws_default_region",
                     "vpc_name",
+                    "sg_name",
                     "bastion_sg_id",
                     "web_sg_id",
                     "api_sg_id",

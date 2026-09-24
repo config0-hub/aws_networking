@@ -8,8 +8,13 @@
  * - Database: Backend database servers
  */
 
+locals {
+  # sg_name falls back to vpc_name, so an unset sg_name keeps the vpc-named groups
+  sg_name = coalesce(var.sg_name, var.vpc_name)
+}
+
 resource "aws_security_group" "bastion" {
-  name        = "bastion"
+  name        = "${local.sg_name}-bastion"
   description = "Bastion Layer Security Group for administrative access"
   vpc_id      = var.vpc_id
 
@@ -56,14 +61,14 @@ resource "aws_security_group" "bastion" {
   tags = merge(
     var.cloud_tags,
     {
-      Name    = "${var.vpc_name}-bastion"
+      Name    = "${local.sg_name}-bastion"
       Product = "security_group"
     },
   )
 }
 
 resource "aws_security_group" "web" {
-  name        = "web"
+  name        = "${local.sg_name}-web"
   description = "Web Layer Security Group for public-facing web servers"
   vpc_id      = var.vpc_id
 
@@ -118,14 +123,14 @@ resource "aws_security_group" "web" {
   tags = merge(
     var.cloud_tags,
     {
-      Name    = "${var.vpc_name}-web"
+      Name    = "${local.sg_name}-web"
       Product = "security_group"
     },
   )
 }
 
 resource "aws_security_group" "api" {
-  name        = "api"
+  name        = "${local.sg_name}-api"
   description = "API Layer Security Group for internal API servers"
   vpc_id      = var.vpc_id
 
@@ -172,14 +177,14 @@ resource "aws_security_group" "api" {
   tags = merge(
     var.cloud_tags,
     {
-      Name    = "${var.vpc_name}-api"
+      Name    = "${local.sg_name}-api"
       Product = "security_group"
     },
   )
 }
 
 resource "aws_security_group" "database" {
-  name        = "database"
+  name        = "${local.sg_name}-database"
   description = "Database Layer Security Group for backend database servers"
   vpc_id      = var.vpc_id
 
@@ -226,7 +231,7 @@ resource "aws_security_group" "database" {
   tags = merge(
     var.cloud_tags,
     {
-      Name    = "${var.vpc_name}-database"
+      Name    = "${local.sg_name}-database"
       Product = "security_group"
     },
   )

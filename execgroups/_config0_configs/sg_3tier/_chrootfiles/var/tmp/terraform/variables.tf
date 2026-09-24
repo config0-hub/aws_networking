@@ -3,6 +3,12 @@ variable "vpc_name" {
   description = "Name of the VPC where security groups will be created"
 }
 
+variable "sg_name" {
+  type        = string
+  description = "Base for the four security-group names and Name tags (<sg_name>-bastion|web|api|database); defaults to vpc_name"
+  default     = null
+}
+
 variable "vpc_id" {
   type        = string
   description = "ID of the VPC where security groups will be created"
