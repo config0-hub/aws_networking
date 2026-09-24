@@ -5,7 +5,7 @@ variable "vpc_name" {
 
 variable "sg_name" {
   type        = string
-  description = "Base for the four security-group names and Name tags (<sg_name>-bastion|web|api|database); defaults to vpc_name"
+  description = "Prefix for the four security-group names and Name tags (<sg_name>-bastion|web|api|database); unset keeps the bare tier names and <vpc_name>-<tier> tags"
   default     = null
 }
 

@@ -18,7 +18,7 @@ The security groups are designed to enforce a layered security model:
 
 ## Naming
 
-The four groups are named and `Name`-tagged `<sg_name>-bastion`, `<sg_name>-web`, `<sg_name>-api`, and `<sg_name>-database`. `sg_name` defaults to `vpc_name`, so leaving it unset gives `<vpc_name>-bastion|web|api|database`.
+With `sg_name` unset the four groups keep their original names: the security-group `name` is the bare tier (`bastion`, `web`, `api`, `database`) and the `Name` tag is `<vpc_name>-bastion|web|api|database`. With `sg_name` set, both the `name` and the `Name` tag become `<sg_name>-bastion|web|api|database`.
 
 AWS security-group names are unique inside a VPC. Set `sg_name` when the VPC already carries a set of these groups (the `aws_vpc_simple` stack creates one set per VPC under the VPC's name) and this run should own a separate set, for example a project that replays its own security-group Terraform inside a shared VPC.
 
@@ -30,7 +30,7 @@ module "security_groups" {
 
   vpc_id   = "vpc-1234567890abcdef0"
   vpc_name = "my-vpc"
-  sg_name  = "my-project"   # optional; defaults to vpc_name
+  sg_name  = "my-project"   # optional; unset keeps the bare tier names
 
   cloud_tags = {
     Environment = "Production"
@@ -45,7 +45,7 @@ module "security_groups" {
 |------|-------------|------|---------|:--------:|
 | vpc_id | ID of the VPC where security groups will be created | `string` | n/a | yes |
 | vpc_name | Name of the VPC where security groups will be created | `string` | n/a | yes |
-| sg_name | Base for the four security-group names and Name tags (`<sg_name>-bastion\|web\|api\|database`) | `string` | `vpc_name` | no |
+| sg_name | Prefix for the four security-group names and Name tags (`<sg_name>-bastion\|web\|api\|database`); unset keeps the bare tier names and `<vpc_name>-<tier>` tags | `string` | `null` | no |
 | aws_default_region | Default AWS region for resource deployment | `string` | `"us-east-1"` | no |
 | cloud_tags | Additional tags to apply to all resources as a map | `map(string)` | `{}` | no |
 

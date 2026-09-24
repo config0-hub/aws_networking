@@ -9,12 +9,14 @@
  */
 
 locals {
-  # sg_name falls back to vpc_name, so an unset sg_name keeps the vpc-named groups
-  sg_name = coalesce(var.sg_name, var.vpc_name)
+  # Unset sg_name keeps the original names: the bare tier for `name`,
+  # "<vpc_name>-<tier>" for the Name tag. A set sg_name prefixes both.
+  name_prefix = var.sg_name == null ? "" : "${var.sg_name}-"
+  tag_prefix  = coalesce(var.sg_name, var.vpc_name)
 }
 
 resource "aws_security_group" "bastion" {
-  name        = "${local.sg_name}-bastion"
+  name        = "${local.name_prefix}bastion"
   description = "Bastion Layer Security Group for administrative access"
   vpc_id      = var.vpc_id
 
@@ -61,14 +63,14 @@ resource "aws_security_group" "bastion" {
   tags = merge(
     var.cloud_tags,
     {
-      Name    = "${local.sg_name}-bastion"
+      Name    = "${local.tag_prefix}-bastion"
       Product = "security_group"
     },
   )
 }
 
 resource "aws_security_group" "web" {
-  name        = "${local.sg_name}-web"
+  name        = "${local.name_prefix}web"
   description = "Web Layer Security Group for public-facing web servers"
   vpc_id      = var.vpc_id
 
@@ -123,14 +125,14 @@ resource "aws_security_group" "web" {
   tags = merge(
     var.cloud_tags,
     {
-      Name    = "${local.sg_name}-web"
+      Name    = "${local.tag_prefix}-web"
       Product = "security_group"
     },
   )
 }
 
 resource "aws_security_group" "api" {
-  name        = "${local.sg_name}-api"
+  name        = "${local.name_prefix}api"
   description = "API Layer Security Group for internal API servers"
   vpc_id      = var.vpc_id
 
@@ -177,14 +179,14 @@ resource "aws_security_group" "api" {
   tags = merge(
     var.cloud_tags,
     {
-      Name    = "${local.sg_name}-api"
+      Name    = "${local.tag_prefix}-api"
       Product = "security_group"
     },
   )
 }
 
 resource "aws_security_group" "database" {
-  name        = "${local.sg_name}-database"
+  name        = "${local.name_prefix}database"
   description = "Database Layer Security Group for backend database servers"
   vpc_id      = var.vpc_id
 
@@ -231,7 +233,7 @@ resource "aws_security_group" "database" {
   tags = merge(
     var.cloud_tags,
     {
-      Name    = "${local.sg_name}-database"
+      Name    = "${local.tag_prefix}-database"
       Product = "security_group"
     },
   )
