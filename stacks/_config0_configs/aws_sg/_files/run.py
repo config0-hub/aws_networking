@@ -15,6 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import os
+
 from config0_publisher.terraform import TFConstructor
 
 
@@ -61,13 +63,16 @@ def run(stackargs):
     stack.init_execgroups()
     stack.init_substacks()
 
-    # get vpc info - this is a bit dangerous b/c it assumes each vpc_name is unique
+    # Resolve the VPC in this order's execution account, not by owner-wide name.
     # vpc_id defaults to the literal "null" (a truthy string), so guard on it too —
     # otherwise the lookup is skipped and the SG deploys against vpc_id="null".
     if not stack.vpc_id or stack.vpc_id == "null":
         vpc_id = stack.get_resource(name=stack.vpc_name,
                                     resource_type="vpc",
-                                    must_exists=True)[0]["vpc_id"]
+                                    provider="aws",
+                                    match={"aws_account_id": os.environ["TARGET_AWS_ACCOUNT"]},
+                                    must_exists=True,
+                                    must_be_one=True)[0]["vpc_id"]
 
         # set variables
         stack.set_variable("vpc_id", vpc_id,
