@@ -24,7 +24,7 @@ def _get_lambda_arn(stack):
         "must_exists": True,
         "resource_type": "aws_lambda",
         "name": stack.lambda_name,
-        "region": stack.aws_default_region
+        "match": {"aws_default_region": stack.aws_default_region}
     }
 
     return list(stack.get_resource(**_lookup))[0]["invoke_arn"]
