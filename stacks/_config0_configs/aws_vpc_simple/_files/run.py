@@ -108,7 +108,8 @@ def run(stackargs):
                        tags="tfvar",
                        types="dict")
 
-    stack.set_variable("timeout", 600)
+    # The SSM interface endpoints' destroy can run past 600 s; 800 is the Lambda target's ceiling (2026-10-29).
+    stack.set_variable("timeout", 800)
 
     # use the terraform constructor (helper)
     tf = TFConstructor(stack=stack,
